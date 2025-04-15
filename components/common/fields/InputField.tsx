@@ -48,7 +48,7 @@ const InputField = <T extends FieldValues>({
           <div className="grid gap-2 w-full">
             {label && (
               <div className="flex  md:flex-row gap-4 w-full justify-between items-center">
-                <FormLabel className="text-white">{label}</FormLabel>
+                <FormLabel className="text-foreground">{label}</FormLabel>
                 <FormMessage className="text-sm font-medium leading-none" />
               </div>
             )}
@@ -61,7 +61,7 @@ const InputField = <T extends FieldValues>({
                   placeholder={placeholder}
                   {...field}
                   {...props}
-                  className={cn("placeholder:text-white/50", classNameInput)}
+                  className={cn("placeholder:foreground/50", classNameInput)}
                 />
               </div>
             </FormControl>

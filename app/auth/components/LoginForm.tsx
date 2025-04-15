@@ -29,7 +29,7 @@ const LoginForm = () => {
     dispatch(setRefreshToken(refreshToken));
     dispatch(setUserId(user.id));
     form.reset();
-    router.push("/home");
+    router.push("/boards");
   };
   return (
     <div>

@@ -31,7 +31,7 @@ const RegistrationForm = () => {
     dispatch(setUserId(response.user.id));
 
     form.reset();
-    router.push("/home");
+    router.push("/boards");
   };
   return (
     <div>
