@@ -12,7 +12,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const { access_token, refresh_token } = useSelector(
     (state: RootState) => state.auth
   );
-  const { data, refetch, isLoading } = useRefreshQuery({});
+  const { data, refetch, isLoading } = useRefreshQuery(
+    { refreshToken: refresh_token },
+    { skip: !refresh_token }
+  );
 
   const router = useRouter();
   useEffect(() => {
@@ -20,7 +23,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (data?.accessToken) {
         dispatch(setToken(data.accessToken));
         dispatch(setUserId(data.user.id));
-        router.push("/home");
+        router.push("/boards");
       }
     } else {
       router.push("/auth");

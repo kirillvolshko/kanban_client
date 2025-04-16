@@ -5,6 +5,8 @@ import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import authReducer from "./auth/authSlice";
 import { boardsService } from "./boards/boardsService";
+import { columnsService } from "./columns/columnsService";
+import { tasksService } from "./tasks/tasksService";
 
 const persistConfig = {
   key: "root",
@@ -15,6 +17,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   [authService.reducerPath]: authService.reducer,
   [boardsService.reducerPath]: boardsService.reducer,
+  [columnsService.reducerPath]: columnsService.reducer,
+  [tasksService.reducerPath]: tasksService.reducer,
 
   auth: authReducer,
 });
@@ -32,7 +36,9 @@ const makeStore = () => {
         },
       }).concat(
         authService.middleware as Middleware,
-        boardsService.middleware as Middleware
+        boardsService.middleware as Middleware,
+        columnsService.middleware as Middleware,
+        tasksService.middleware as Middleware
       ),
   });
 };
