@@ -30,10 +30,10 @@ export const DialogWindow = ({
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true); // Ensure component only renders on the client side
+    setIsClient(true);
   }, []);
 
-  if (!isClient) return null; // Render nothing on the server side
+  if (!isClient) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen} modal={true}>
@@ -52,7 +52,7 @@ export const DialogWindow = ({
 
       <DialogContent
         className={cn(
-          "bg-primarySecondary fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg p-[20px] md:p-[30px] overflow-y-auto max-h-[80vh]",
+          "bg-secondary fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-lg shadow-lg p-[20px] md:p-[30px] overflow-y-auto max-h-[80vh]",
           fullView && "p-0 border-none",
           className
         )}

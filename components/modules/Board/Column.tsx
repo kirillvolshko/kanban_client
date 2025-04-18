@@ -1,14 +1,19 @@
 "use client";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { useDroppable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { IColumnResponse } from "@/types/column";
 import { useGetTasksByColumnQuery } from "@/store/tasks/tasksService";
+import SortableTaskCard from "./SortableTaskCard";
 import TaskCard from "./TaskCard";
+import { PopoverWindow } from "@/components/common/ui/PopoverWindow";
+import { ActionButton } from "@/components/common/ui/ActionButton";
+import { Plus } from "lucide-react";
+import AddTaskForm from "./forms/AddTaskForm";
 
 interface Props {
   column: IColumnResponse;
@@ -16,6 +21,7 @@ interface Props {
 
 const Column = ({ column }: Props) => {
   const { data: tasks = [] } = useGetTasksByColumnQuery(column.id);
+
   const { setNodeRef: setDropRef, isOver } = useDroppable({ id: column.id });
 
   const { setNodeRef, attributes, listeners, transform, transition } =
@@ -32,9 +38,9 @@ const Column = ({ column }: Props) => {
   return (
     <div
       ref={setNodeRef}
-      style={style}
       {...attributes}
       {...listeners}
+      style={style}
       className="bg-gray-100 rounded w-72 min-w-[280px] p-3 flex flex-col shadow-md"
     >
       <h2 className="font-semibold mb-3">{column.title}</h2>
@@ -46,18 +52,20 @@ const Column = ({ column }: Props) => {
         }`}
       >
         <SortableContext
-          items={tasks.map((task) => task.id)}
+          items={tasks.map((t) => t.id)}
           strategy={verticalListSortingStrategy}
         >
           {[...tasks]
             .sort((a, b) => a.position - b.position)
             .map((task, index) => (
-              <TaskCard
+              <SortableTaskCard
                 key={task.id}
-                taskId={task.id}
+                task={task}
                 columnId={column.id}
                 index={index}
-              />
+              >
+                <TaskCard task={task} />
+              </SortableTaskCard>
             ))}
         </SortableContext>
 
@@ -66,6 +74,17 @@ const Column = ({ column }: Props) => {
             Drop here
           </div>
         )}
+        <div className="mt-4 w-full" onPointerDown={(e) => e.stopPropagation()}>
+          <PopoverWindow
+            triggerComponent={
+              <ActionButton icon={<Plus />} title="Create task" />
+            }
+            content={
+              <AddTaskForm column_id={column.id} position={tasks.length} />
+            }
+            className="w-full"
+          />
+        </div>
       </div>
     </div>
   );

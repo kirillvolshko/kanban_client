@@ -1,45 +1,73 @@
 "use client";
+import {
+  DndContext,
+  closestCorners,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { useState } from "react";
+import { useParams } from "next/navigation";
 import { Spinner } from "@/components/common/ui/Spinner";
-import { useErrorHandler } from "@/hooks/useErrorHandler";
 import {
   useGetColumnsByBoardIdQuery,
   useMoveColumnMutation,
 } from "@/store/columns/columnsService";
 import { useMoveTaskMutation } from "@/store/tasks/tasksService";
-import { useParams } from "next/navigation";
-import { DndContext, DragEndEvent, closestCenter } from "@dnd-kit/core";
+import { ITask } from "@/types/task";
 import ColumnList from "./ColumnList";
+import DragOverlayCard from "./DragOverlayCard";
 
 export const Board = () => {
-  const { id } = useParams() as { id: string };
-  const {
-    data: columns = [],
-    error,
-    isLoading,
-  } = useGetColumnsByBoardIdQuery(id);
+  const { id: boardId } = useParams() as { id: string };
 
+  const { data: columns = [], isLoading } =
+    useGetColumnsByBoardIdQuery(boardId);
   const [moveColumn] = useMoveColumnMutation();
   const [moveTask] = useMoveTaskMutation();
 
-  useErrorHandler(error);
+  const [activeTask, setActiveTask] = useState<ITask | null>(null);
 
-  const handleDragEnd = async (event: DragEndEvent) => {
-    const { active, over } = event;
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const handleDragStart = ({ active }: DragStartEvent) => {
+    const type = active.data.current?.type;
+    if (type === "task" && active.data.current?.task) {
+      setActiveTask(active.data.current.task);
+    }
+  };
+
+  const handleDragEnd = async ({ active, over }: DragEndEvent) => {
+    setActiveTask(null);
     if (!over || active.id === over.id) return;
 
     const activeType = active.data.current?.type;
 
     if (activeType === "column") {
       const newIndex = columns.findIndex((col) => col.id === over.id);
+      if (newIndex === -1) return;
       await moveColumn({ id: active.id.toString(), position: newIndex + 1 });
     }
 
     if (activeType === "task") {
-      const toColumn = over.data.current?.columnId;
-      const newIndex = over.data.current?.index;
+      const taskId = active.id.toString();
+      const fromColumn = active.data.current?.columnId;
+      let toColumn = over.data.current?.columnId;
+      let newIndex = over.data.current?.index;
+
+      if (!toColumn && over.id) {
+        toColumn = over.id.toString();
+        newIndex = 0;
+      }
+
+      if (!fromColumn || !toColumn || typeof newIndex !== "number") return;
+
       await moveTask({
-        id: active.id.toString(),
-        position: (typeof newIndex === "number" ? newIndex : 0) + 1,
+        id: taskId,
+        position: newIndex + 1,
         column_id: toColumn,
       });
     }
@@ -48,10 +76,20 @@ export const Board = () => {
   if (isLoading) return <Spinner />;
 
   return (
-    <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-      <div className="flex overflow-x-auto h-full p-4 gap-4">
-        <ColumnList boardId={id} columns={columns} />
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCorners}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+    >
+      <div className="flex gap-4 overflow-x-auto p-4 min-h-[calc(100vh-200px)]">
+        <ColumnList boardId={boardId} columns={columns} />
       </div>
+      <DragOverlay>
+        {activeTask ? <DragOverlayCard task={activeTask} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 };
+
+export default Board;

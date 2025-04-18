@@ -1,6 +1,7 @@
 "use client";
 import { IBoardResponse, ICreateBoard } from "@/types/board";
 import { BaseQueryParams } from "../baseQuery";
+import { IUserShort } from "@/types/user";
 
 export const boardsService = BaseQueryParams("boards", [
   "BOARDS",
@@ -14,6 +15,7 @@ export const boardsService = BaseQueryParams("boards", [
       }),
       providesTags: ["BOARDS"],
     }),
+
     createBoard: builder.mutation<unknown, ICreateBoard>({
       query: (body) => ({
         url: "/boards",
@@ -23,6 +25,7 @@ export const boardsService = BaseQueryParams("boards", [
       }),
       invalidatesTags: ["BOARDS"],
     }),
+
     deleteBoard: builder.mutation<{ message: string }, string>({
       query: (id) => ({
         url: `/boards/${id}`,
@@ -31,6 +34,14 @@ export const boardsService = BaseQueryParams("boards", [
       }),
       invalidatesTags: ["BOARDS"],
     }),
+
+    getUsersByBoardId: builder.query<IUserShort[], string>({
+      query: (boardId) => ({
+        url: `/boards/${boardId}/users`,
+        method: "GET",
+        credentials: "include",
+      }),
+    }),
   }),
 });
 
@@ -38,4 +49,5 @@ export const {
   useCreateBoardMutation,
   useDeleteBoardMutation,
   useGetBoardsByUserIdQuery,
+  useGetUsersByBoardIdQuery,
 } = boardsService;
