@@ -22,8 +22,9 @@ export const TabLayout = (data: TabLayoutProps) => {
     <Tabs
       defaultValue={data.data[0].title}
       onValueChange={(value) => setActiveTab(value)}
+      className="p-[30px]"
     >
-      <TabsList className="bg-white/15 rounded-[4px]">
+      <TabsList className="bg-secondary rounded-[4px] ">
         {data.data.map((item) => (
           <TabsTrigger value={item.title} key={item.title}>
             <item.icon
@@ -39,7 +40,7 @@ export const TabLayout = (data: TabLayoutProps) => {
         <TabsContent
           value={item.title}
           key={item.title}
-          className=" rounded-[31px] p-[30px] h-full min-h-[calc(100vh-200px)]"
+          className=" rounded-[31px] p-[30px] h-full min-h-[calc(100vh-260px)]"
         >
           {item.content}
         </TabsContent>

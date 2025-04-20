@@ -1,6 +1,7 @@
 "use client";
 
 import { Board } from "@/components/modules/Board/Board";
+import { SettigsTab } from "@/components/modules/Settings/Settings";
 import { UserRoundSearch, Building } from "lucide-react";
 
 export const TabsConfig = [
@@ -12,6 +13,6 @@ export const TabsConfig = [
   {
     title: "Settings",
     icon: Building,
-    content: <p>data</p>,
+    content: <SettigsTab />,
   },
 ];

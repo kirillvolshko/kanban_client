@@ -41,13 +41,13 @@ const Column = ({ column }: Props) => {
       {...attributes}
       {...listeners}
       style={style}
-      className="bg-gray-100 rounded w-72 min-w-[280px] p-3 flex flex-col shadow-md"
+      className="bg-gray-100 rounded w-72 min-w-[280px] p-3 flex flex-col shadow-md "
     >
       <h2 className="font-semibold mb-3">{column.title}</h2>
 
       <div
         ref={setDropRef}
-        className={`transition-all flex flex-col gap-2 ${
+        className={`transition-all flex flex-col gap-2  ${
           isOver ? "bg-blue-100 rounded p-2" : ""
         }`}
       >

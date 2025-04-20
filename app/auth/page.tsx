@@ -18,7 +18,7 @@ const AuthPage = () => {
           )}
         >
           <div className="absolute w-full h-full [backface-visibility:hidden]">
-            <div className="bg-white/90 p-6 rounded shadow-md h-full flex flex-col justify-between">
+            <div className="bg-secondary p-6 rounded shadow-md h-full flex flex-col justify-between">
               <LoginForm />
               <Button className="mt-4" onClick={() => setIsRegistering(true)}>
                 Dont have an account? Register
@@ -27,7 +27,7 @@ const AuthPage = () => {
           </div>
 
           <div className="absolute w-full h-full [backface-visibility:hidden] [transform:rotateY(180deg)]">
-            <div className="bg-white/90 p-6 rounded shadow-md h-full flex flex-col justify-between">
+            <div className="bg-secondary p-6 rounded shadow-md h-full flex flex-col justify-between">
               <RegistrationForm />
               <Button className="mt-4" onClick={() => setIsRegistering(false)}>
                 Already registered? Login

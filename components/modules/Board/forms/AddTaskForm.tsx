@@ -7,7 +7,6 @@ import InputField from "@/components/common/fields/InputField";
 import { Button } from "@/components/ui/button";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
 
-import { Spinner } from "@/components/common/ui/Spinner";
 import { CreateTaskSchema } from "./schemas/taskSchema";
 import { useCreateTaskMutation } from "@/store/tasks/tasksService";
 
@@ -25,7 +24,7 @@ const AddTaskForm = ({
     resolver: zodResolver(CreateTaskSchema),
     defaultValues: { title: "" },
   });
-  const [create, { isLoading, error }] = useCreateTaskMutation();
+  const [create, { error }] = useCreateTaskMutation();
   useErrorHandler(error);
   const handleOnSubmit = async (data: FormValues) => {
     const { title } = data;
@@ -36,7 +35,7 @@ const AddTaskForm = ({
     }).unwrap();
     if (onClose) onClose(true);
   };
-  if (isLoading) return <Spinner />;
+
   return (
     <div>
       <Form {...form}>

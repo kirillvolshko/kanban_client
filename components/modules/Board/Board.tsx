@@ -82,7 +82,7 @@ export const Board = () => {
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
-      <div className="flex gap-4 overflow-x-auto p-4 min-h-[calc(100vh-200px)]">
+      <div className="flex gap-4 overflow-x-auto p-4 min-h-[calc(100vh-270px)]">
         <ColumnList boardId={boardId} columns={columns} />
       </div>
       <DragOverlay>

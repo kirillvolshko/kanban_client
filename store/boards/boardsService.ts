@@ -1,10 +1,16 @@
 "use client";
-import { IBoardResponse, ICreateBoard } from "@/types/board";
+import {
+  IAddUser,
+  IBoardResponse,
+  ICreateBoard,
+  IDeleteUser,
+} from "@/types/board";
 import { BaseQueryParams } from "../baseQuery";
 import { IUserShort } from "@/types/user";
 
 export const boardsService = BaseQueryParams("boards", [
   "BOARDS",
+  "SETTINGS",
 ]).injectEndpoints({
   endpoints: (builder) => ({
     getBoardsByUserId: builder.query<IBoardResponse[], string>({
@@ -25,6 +31,14 @@ export const boardsService = BaseQueryParams("boards", [
       }),
       invalidatesTags: ["BOARDS"],
     }),
+    addBoardToUser: builder.mutation<unknown, IAddUser>({
+      query: (body) => ({
+        url: "/boards/add-user",
+        method: "POST",
+        credentials: "include",
+        body,
+      }),
+    }),
 
     deleteBoard: builder.mutation<{ message: string }, string>({
       query: (id) => ({
@@ -34,6 +48,15 @@ export const boardsService = BaseQueryParams("boards", [
       }),
       invalidatesTags: ["BOARDS"],
     }),
+    deleteUserFromBoard: builder.mutation<{ message: string }, IDeleteUser>({
+      query: (body) => ({
+        url: `/boards/user`,
+        method: "DELETE",
+        credentials: "include",
+        body,
+      }),
+      invalidatesTags: ["SETTINGS"],
+    }),
 
     getUsersByBoardId: builder.query<IUserShort[], string>({
       query: (boardId) => ({
@@ -41,6 +64,7 @@ export const boardsService = BaseQueryParams("boards", [
         method: "GET",
         credentials: "include",
       }),
+      providesTags: ["SETTINGS"],
     }),
   }),
 });
@@ -50,4 +74,6 @@ export const {
   useDeleteBoardMutation,
   useGetBoardsByUserIdQuery,
   useGetUsersByBoardIdQuery,
+  useAddBoardToUserMutation,
+  useDeleteUserFromBoardMutation,
 } = boardsService;
