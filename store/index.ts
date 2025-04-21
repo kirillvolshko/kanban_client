@@ -4,6 +4,7 @@ import { authService } from "./auth/authService";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import authReducer from "./auth/authSlice";
+import boardReducer from "./boards/boardSlice";
 import { boardsService } from "./boards/boardsService";
 import { columnsService } from "./columns/columnsService";
 import { tasksService } from "./tasks/tasksService";
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   [tasksService.reducerPath]: tasksService.reducer,
 
   auth: authReducer,
+  board: boardReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
