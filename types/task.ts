@@ -6,7 +6,7 @@ export interface ITask {
   description?: string;
   start_date?: string;
   end_date?: string;
-  priority?: string;
+  priority?: "low" | "medium" | "high";
   assigned_to?: string;
   created_at: string;
 }

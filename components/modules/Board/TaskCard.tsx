@@ -3,6 +3,8 @@ import { DialogWindow } from "@/components/common/ui/DialogWindow";
 import { ITask } from "@/types/task";
 import { ArrowUpRight } from "lucide-react";
 import EditTaskForm from "./forms/EditTaskForm";
+import { dateTransaltion } from "@/utils/dateTranslation";
+import { getPriority } from "@/utils/priority";
 
 interface Props {
   task: ITask;
@@ -20,9 +22,25 @@ const TaskCard = ({ task }: Props) => {
       </div>
 
       <h3 className="font-medium">{task.title}</h3>
+
       {task.description && (
-        <p className="text-sm text-gray-500 mt-1">{task.description}</p>
+        <p className="text-sm text-gray-500 mt-1">
+          {task.description.length > 40
+            ? `${task.description.slice(0, 40)}...`
+            : task.description}
+        </p>
       )}
+
+      <div className="flex justify-between">
+        <p className="text-[14px] opacity-50">
+          {task.start_date && task.end_date
+            ? dateTransaltion(task.start_date) +
+              " - " +
+              dateTransaltion(task.end_date)
+            : "Date not selected"}
+        </p>
+        {task.priority && getPriority(task.priority)}
+      </div>
     </div>
   );
 };
