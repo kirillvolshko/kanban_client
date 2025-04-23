@@ -55,7 +55,7 @@ const EditTaskForm = ({ task, onClose }: Props) => {
   const { data: columns = [], isLoading: columnsLoading } =
     useGetColumnsByBoardIdQuery(boardId);
 
-  const priorities = ["low", "medium", "high", "urgent"].map((p) => ({
+  const priorities = ["low", "medium", "high"].map((p) => ({
     label: p,
     value: p,
   }));
