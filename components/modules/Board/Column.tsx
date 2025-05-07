@@ -12,8 +12,9 @@ import SortableTaskCard from "./SortableTaskCard";
 import TaskCard from "./TaskCard";
 import { PopoverWindow } from "@/components/common/ui/PopoverWindow";
 import { ActionButton } from "@/components/common/ui/ActionButton";
-import { Plus } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import AddTaskForm from "./forms/AddTaskForm";
+import { useDeleteColumnMutation } from "@/store/columns/columnsService";
 
 interface Props {
   column: IColumnResponse;
@@ -21,9 +22,11 @@ interface Props {
 
 const Column = ({ column }: Props) => {
   const { data: tasks = [] } = useGetTasksByColumnQuery(column.id);
-
+  const [deleteColumn] = useDeleteColumnMutation();
   const { setNodeRef: setDropRef, isOver } = useDroppable({ id: column.id });
-
+  const handleDelete = async (id: string) => {
+    await deleteColumn(id);
+  };
   const { setNodeRef, attributes, listeners, transform, transition } =
     useSortable({
       id: column.id,
@@ -43,7 +46,14 @@ const Column = ({ column }: Props) => {
       style={style}
       className="bg-gray-100 rounded w-72 min-w-[280px] p-3 flex flex-col shadow-md "
     >
-      <h2 className="font-semibold mb-3">{column.title}</h2>
+      <div className="flex justify-between group">
+        <h2 className="font-semibold mb-3">{column.title}</h2>
+        <X
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={() => handleDelete(column.id)}
+          className="text-red-600 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        />
+      </div>
 
       <div
         ref={setDropRef}
