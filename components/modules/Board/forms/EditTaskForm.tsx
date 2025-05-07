@@ -10,7 +10,10 @@ import { Spinner } from "@/components/common/ui/Spinner";
 import { useErrorHandler } from "@/hooks/useErrorHandler";
 import { useGetUsersByBoardIdQuery } from "@/store/boards/boardsService";
 import { useGetColumnsByBoardIdQuery } from "@/store/columns/columnsService";
-import { useUpdateTaskMutation } from "@/store/tasks/tasksService";
+import {
+  useDeleteTaskMutation,
+  useUpdateTaskMutation,
+} from "@/store/tasks/tasksService";
 import { RawTaskUpdateSchema, TaskUpdateSchema } from "./schemas/taskSchema";
 import TextareaField from "@/components/common/fields/TextAreaField";
 import { useParams } from "next/navigation";
@@ -48,6 +51,7 @@ const EditTaskForm = ({ task, onClose }: Props) => {
   });
   const { id: boardId } = useParams() as { id: string };
   const [updateTask, { isLoading, error }] = useUpdateTaskMutation();
+  const [deleteTask] = useDeleteTaskMutation();
   useErrorHandler(error);
 
   const { data: users = [], isLoading: usersLoading } =
@@ -59,6 +63,11 @@ const EditTaskForm = ({ task, onClose }: Props) => {
     label: p,
     value: p,
   }));
+
+  const handleDelete = async (id: string) => {
+    await deleteTask(id).unwrap();
+    if (onClose) onClose(true);
+  };
 
   const handleSubmit = async (data: FormValues) => {
     await updateTask({
@@ -86,7 +95,7 @@ const EditTaskForm = ({ task, onClose }: Props) => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(handleSubmit)}
-        className="flex flex-col gap-4"
+        className="flex flex-col gap-4 w-full"
       >
         <InputField
           control={form.control}
@@ -139,8 +148,16 @@ const EditTaskForm = ({ task, onClose }: Props) => {
           label="End Date"
           type="date"
         />
-
-        <Button type="submit">Save changes</Button>
+        <div className="flex gap-5 w-full">
+          <Button type="submit">Save changes</Button>
+          <Button
+            type="button"
+            variant="delete"
+            onClick={() => handleDelete(task.id)}
+          >
+            Delete task
+          </Button>
+        </div>
       </form>
     </Form>
   );
