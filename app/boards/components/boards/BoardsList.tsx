@@ -10,10 +10,11 @@ export const BoardsList = () => {
   const { data, error, isLoading } = useGetBoardsByUserIdQuery(userId, {
     skip: !userId,
   });
+
   useErrorHandler(error);
   if (isLoading) return <Spinner />;
   return (
-    <div className="flex gap-5">
+    <div className="flex gap-5 flex-wrap">
       {data
         ?.map((board) => (
           <BoardCard data={board} userId={userId} key={board.id} />
